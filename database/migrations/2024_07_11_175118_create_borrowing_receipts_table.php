@@ -13,19 +13,16 @@ return new class extends Migration
     {
         Schema::create('borrowing_receipts', function (Blueprint $table) {
             $table->string('receipt_id', 50)->primary();
-            $table->string('employee_account_id', 50);
-            $table->string('member_account_id', 50);
+            $table->id('member_account_id');
             $table->string('fee_id', 50);
             $table->date('borrow_date');
             $table->date('due_date');
             $table->date('return_date')->nullable();
             $table->string('status', 50);
 
-            $table->foreign('employee_account_id')->references('account_id')->on('accounts');
-            $table->foreign('member_account_id')->references('account_id')->on('accounts');
+            $table->foreign('member_account_id')->references('id')->on('users');
             $table->foreign('fee_id')->references('fee_id')->on('fees');
 
-            $table->index('employee_account_id');
             $table->index('member_account_id');
             $table->index('fee_id');
         });

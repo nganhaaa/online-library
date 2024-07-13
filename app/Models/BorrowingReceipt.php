@@ -16,7 +16,6 @@ class BorrowingReceipt extends Model
 
     protected $fillable = [
         'receipt_id',
-        'employee_account_id',
         'member_account_id',
         'fee_id',
         'borrow_date',
@@ -26,14 +25,10 @@ class BorrowingReceipt extends Model
     ];
 
     // Define relationships
-    public function employeeAccount()
-    {
-        return $this->belongsTo(Account::class, 'employee_account_id', 'account_id');
-    }
 
     public function memberAccount()
     {
-        return $this->belongsTo(Account::class, 'member_account_id', 'account_id');
+        return $this->belongsTo(User::class, 'member_account_id', 'id');
     }
 
     public function fee()
