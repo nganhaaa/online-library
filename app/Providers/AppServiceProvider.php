@@ -2,7 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Author;
+use App\Models\Book;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Genre;
+use App\Models\Publisher;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::share('authors', Author::all());
+        View::share('books', Book::all());
+        View::share('genres', Genre::all());
+        // View::share('publishers', Publisher::all());
     }
 }

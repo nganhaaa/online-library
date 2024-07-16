@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Library</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -157,9 +158,11 @@
                 <a href="#">HƯỚNG DẪN</a>
                 <div class="dropdown">
                     <a href="#">GENRE</a>
-                    @foreach ($genres as $genre)
-                            <a href="#">{{ $genre->genre_name }}</a>
-                        @endforeach
+                    <div class="dropdown-content">
+                        @foreach ($genres->take(5) as $genre)
+                        <a href="#">{{ $genre->genre_name }}</a>
+                    @endforeach
+                    </div>
                 </div>
                 <a href="#">AUTHOR</a>
                 <a href="#">NXB</a>
@@ -170,9 +173,9 @@
                         <a href="#">Nhóm tuổi 2</a>
                     </div>
                 </div>
-                <a href="#"><i class="icon-search"></i></a>
-                <a href="#"><i class="icon-user"></i></a>
-                <a href="#"><i class="icon-cart"></i></a>
+                <a href="#"><i class="fas fa-search"></i></a>
+<a href="#"><i class="fas fa-user"></i></a>
+<a href="#"><i class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
     </header>

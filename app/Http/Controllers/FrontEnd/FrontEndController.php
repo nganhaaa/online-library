@@ -3,58 +3,73 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\BookController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\GenreController;
-use App\Http\Controllers\AuthorController;
+use App\Models\Publisher;
+use App\Models\Genre;
+use App\Models\Author;
 
 class FrontEndController extends Controller
 {
     /**
-     * Display a listing of books.
+     * Display the specified resource.
      */
-    public function booksIndex()
+    public function show($model, $id)
     {
-        return app(BookController::class)->index();
+        $item = null;
+        $view = '';
+
+        switch ($model) {
+            case 'publisher':
+                $item = Publisher::findOrFail($id);
+                $view = 'publishers.show';
+                break;
+            case 'genre':
+                $item = Genre::findOrFail($id);
+                $view = 'genres.show';
+                break;
+            case 'author':
+                $item = Author::findOrFail($id);
+                $view = 'authors.show';
+                break;
+            // Add more cases for other models as needed
+            default:
+                abort(404);
+        }
+
+        return view($view, compact('item'));
     }
 
-    /**
-     * Display the specified book.
+     /**
+     * Display a listing of items based on model.
+     *
+     * @param string $model
+     * @return \Illuminate\View\View
      */
-    public function booksShow($book)
-    {
-        return app(BookController::class)->show($book);
-    }
+    // public function index($model)
+    // {
+    //     switch ($model) {
+    //         case 'publishers':
+    //             $items = Publisher::all();
+    //             $view = 'publishers.index';
+    //             break;
+    //         case 'genres':
+    //             $items = Genre::all();
+    //             $view = 'genres.index';
+    //             break;
+    //         case 'authors':
+    //             $items = Author::all();
+    //             $view = 'authors.index';
+    //             break;
+    //         default:
+    //             abort(404);
+    //     }
 
-    /**
-     * Display a listing of genres.
-     */
-    public function genresIndex()
-    {
-        return app(GenreController::class)->index();
-    }
+    //     return view($view, compact('items'));
+    // }
 
-    /**
-     * Display the specified genre.
-     */
-    public function genresShow($genre)
+    public function GenreIndex()
     {
-        return app(GenreController::class)->show($genre);
-    }
-
-    /**
-     * Display a listing of authors.
-     */
-    public function authorsIndex()
-    {
-        return app(AuthorController::class)->index();
-    }
-
-    /**
-     * Display the specified author.
-     */
-    public function authorsShow($author)
-    {
-        return app(AuthorController::class)->show($author);
+        $genres = Genre::all();
+        return view('dashboard', compact('genres'));
     }
 }
+
