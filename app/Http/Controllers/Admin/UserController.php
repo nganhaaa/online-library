@@ -27,7 +27,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'is_admin' => 'boolean',
         ]);
-
+        
         User::create([
             'name' => $request->name,
             'email' => $request->email,

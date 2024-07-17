@@ -13,7 +13,6 @@ class Book extends Model
     protected $primaryKey = 'book_id';
     public $incrementing = false; // Since book_id is not an auto-incrementing integer
     protected $keyType = 'string';
-
     protected $fillable = [
         'book_id',
         'book_name',
@@ -23,6 +22,7 @@ class Book extends Model
         'available',
         'quantity',
         'price',
+        'image'
     ];
 
     // Define the relationships

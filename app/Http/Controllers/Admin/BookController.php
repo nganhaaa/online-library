@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -38,9 +39,16 @@ class BookController extends Controller
             'available' => 'required|integer',
             'quantity' => 'required|integer',
             'price' => 'required|integer',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Book::create($request->all());
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('books', 'public');
+        } else {
+            $imagePath = null;
+        }
+
+        Book::create(array_merge($request->all(), ['image' => $imagePath]));
 
         return redirect()->route('admin.books.index')->with('success', 'Book created successfully.');
     }
@@ -74,9 +82,19 @@ class BookController extends Controller
             'available' => 'required|integer',
             'quantity' => 'required|integer',
             'price' => 'required|integer',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $book->update($request->all());
+        if ($request->hasFile('image')) {
+            if ($book->image) {
+                Storage::delete('public/' . $book->image);
+            }
+            $imagePath = $request->file('image')->store('books', 'public');
+        } else {
+            $imagePath = $book->image;
+        }
+
+        $book->update(array_merge($request->all(), ['image' => $imagePath]));
 
         return redirect()->route('admin.books.index')->with('success', 'Book updated successfully.');
     }
@@ -86,6 +104,10 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        if ($book->image) {
+            Storage::delete('public/' . $book->image);
+        }
+        
         $book->delete();
         return redirect()->route('admin.books.index')->with('success', 'Book deleted successfully.');
     }
