@@ -35,24 +35,6 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     ]);
 });
 
-// Route::get('/', [FrontEndController::class, 'genresIndex']);
-
-// // Books
-// Route::get('/books', [FrontEndController::class, 'booksIndex'])->name('books.index');
-// Route::get('/books/{book}', [FrontEndController::class, 'booksShow'])->name('books.show');
-
-// // Genres
-// Route::get('/genres', [FrontEndController::class, 'genresIndex'])->name('genres.index');
-// Route::get('/genres/{genre}', [FrontEndController::class, 'genresShow'])->name('genres.show');
-
-// // Authors
-// Route::get('/authors', [FrontEndController::class, 'authorsIndex'])->name('authors.index');
-// Route::get('/authors/{author}', [FrontEndController::class, 'authorsShow'])->name('authors.show');
-
-// // Publishers
-// Route::get('/publishers', [FrontEndController::class, 'publishersIndex'])->name('publishers.index');
-// Route::get('/publishers/{publisher}', [FrontEndController::class, 'publishersShow'])->name('publishers.show');
-
 Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{book}', [CartController::class, 'add'])->name('cart.add');

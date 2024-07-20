@@ -24,7 +24,7 @@ class Book extends Model
         'price',
         'image'
     ];
-
+    public $timestamps = false;
     // Define the relationships
     public function ageGroup()
     {

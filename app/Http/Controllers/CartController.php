@@ -2,103 +2,88 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
-use App\Models\Book;
-use App\Models\BorrowingReceipt;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Book;
+use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $cartItems = Cart::where('user_id', Auth::id())->with('book')->get();
+        // Retrieve cart items from session
+        $cartItems = $request->session()->get('cart', []);
+        $books = Book::whereIn('book_id', array_keys($cartItems))->get()->keyBy('book_id');
+
+        // Merge cart items with book details
+        foreach ($cartItems as $bookId => $item) {
+            if (isset($books[$bookId])) {
+                $item['book'] = $books[$bookId];
+            }
+        }
+
+        // Pass cart items to the view
         return view('cart.index', compact('cartItems'));
     }
 
     public function add(Request $request, $bookId)
     {
-        // Validate the request (optional)
-        $request->validate([
-            'quantity' => 'required|integer|min:1',
-        ]);
-    
-        // Find the book by its ID
+        Log::info('Add to cart method called with book ID: ' . $bookId);
+
         $book = Book::find($bookId);
         if (!$book) {
             return redirect()->back()->with('error', 'Book not found.');
         }
-    
-        // Initialize cart in session if not already set
+
+        if ($book->available <= 0) {
+            return redirect()->back()->with('error', 'Book is out of stock.');
+        }
+
+        $book->available -= 1;
+        $book->save();
+
         if (!$request->session()->has('cart')) {
             $request->session()->put('cart', []);
         }
-    
-        // Get the current cart from session
+
         $cart = $request->session()->get('cart');
-    
-        // Check if the book is already in the cart
+
         if (isset($cart[$bookId])) {
-            // Update quantity if book is already in the cart
-            $cart[$bookId]['quantity'] += $request->input('quantity', 1);
+            $cart[$bookId]['quantity'] += 1;
         } else {
-            // Add new book to the cart
             $cart[$bookId] = [
-                'book' => $book,
-                'quantity' => $request->input('quantity', 1),
+                'book_id' => $book->book_id,
+                'quantity' => 1,
             ];
         }
-    
-        // Save the updated cart back to session
+
         $request->session()->put('cart', $cart);
-    
+
+        Log::info('Cart contents: ' . print_r($cart, true));
+
         return redirect()->back()->with('success', 'Book added to cart!');
     }
-    
 
     public function remove($id)
     {
-        $cartItem = Cart::where('user_id', Auth::id())->where('id', $id)->firstOrFail();
-        $cartItem->delete();
-
-        return redirect()->route('cart.index')->with('success', 'Book removed from cart.');
+        $cart = session('cart', []);
+        if (isset($cart[$id])) {
+            $book = Book::find($id);
+            if ($book) {
+                $book->available += $cart[$id]['quantity'];
+                $book->save();
+            }
+            unset($cart[$id]);
+            session()->put('cart', $cart);
+        }
+        return redirect()->route('cart.index')->with('success', 'Book removed from cart!');
     }
 
-    public function createBorrowingReceipt()
+    public function createBorrowingReceipt(Request $request)
     {
-        $cartItems = Cart::where('user_id', Auth::id())->get();
+        // Handle the creation of borrowing receipt
+        // This would typically involve saving details to the database
 
-        if ($cartItems->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
-        }
-
-        $borrowingReceipt = BorrowingReceipt::create([
-            'receipt_id' => uniqid('receipt_'),
-            'member_account_id' => Auth::id(),
-            'fee_id' => null, // Adjust this based on your fee structure
-            'borrow_date' => now(),
-            'due_date' => now()->addWeeks(2), // Set due date as two weeks from now
-            'return_date' => null,
-            'status' => 'borrowed',
-        ]);
-
-        foreach ($cartItems as $item) {
-            $borrowingReceipt->borrowedBooks()->create([
-                'receipt_id' => $borrowingReceipt->receipt_id,
-                'book_id' => $item->book_id,
-                'quantity' => $item->quantity,
-            ]);
-
-            // Update book availability
-            $book = Book::findOrFail($item->book_id);
-            $book->available -= $item->quantity;
-            $book->save();
-        }
-
-        // Empty the cart
-        Cart::where('user_id', Auth::id())->delete();
-
-        return redirect()->route('borrowings.show', $borrowingReceipt->receipt_id)
-            ->with('success', 'Borrowing receipt created successfully.');
+        session()->forget('cart');
+        return redirect()->route('cart.index')->with('success', 'Borrowing receipt created!');
     }
 }
