@@ -9,15 +9,15 @@ class BorrowingReceipt extends Model
 {
     use HasFactory;
 
-    protected $table = 'borrowing_receipt';
+    protected $table = 'borrowing_receipts';
     protected $primaryKey = 'receipt_id';
     public $incrementing = false; // Since receipt_id is not an auto-incrementing integer
     protected $keyType = 'string';
+    public $timestamps = false;
 
     protected $fillable = [
         'receipt_id',
         'member_account_id',
-        'fee_id',
         'borrow_date',
         'due_date',
         'return_date',

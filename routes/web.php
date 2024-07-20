@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{book}', [CartController::class, 'add'])->name('cart.add');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::patch('/cart/update/{book}', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/borrow', [CartController::class, 'createBorrowingReceipt'])->name('cart.borrow');
 });
 

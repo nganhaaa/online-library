@@ -51,18 +51,13 @@
         margin: 10px 0;
     }
 
-    .book-author {
-        color: #555;
-        margin-bottom: 10px;
-    }
-
     .btn {
         display: inline-block;
         padding: 10px 15px;
         font-size: 14px;
         font-weight: bold;
         color: #fff;
-        background-color: #007bff;
+        background-color: #f05fed;
         border: none;
         border-radius: 5px;
         cursor: pointer;
@@ -71,6 +66,6 @@
     }
 
     .btn:hover {
-        background-color: #0056b3;
+        background-color: #e71fd0;
     }
 </style>

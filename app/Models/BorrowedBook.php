@@ -9,7 +9,7 @@ class BorrowedBook extends Model
 {
     use HasFactory;
 
-    protected $table = 'borrowed_book';
+    protected $table = 'borrowed_books';
     public $incrementing = false; // Since primary key is composite
     protected $keyType = 'string';
 

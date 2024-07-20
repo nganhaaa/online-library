@@ -12,8 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('borrowed_books', function (Blueprint $table) {
-            $table->id();
+            $table->string('receipt_id', 50);
+            $table->string('book_id', 50);
+            $table->integer('quantity');
+            $table->string('status')->default('reserved');
             $table->timestamps();
+
+            $table->primary(['receipt_id', 'book_id']);
+
+            $table->foreign('receipt_id')->references('receipt_id')->on('borrowing_receipts')->onDelete('cascade');
+            $table->foreign('book_id')->references('book_id')->on('books')->onDelete('cascade');
         });
     }
 
