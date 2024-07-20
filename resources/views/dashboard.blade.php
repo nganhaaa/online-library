@@ -5,14 +5,17 @@
     <div class="book-container">
         <!-- Example books, replace with dynamic content as needed -->
         @foreach($books as $book)
-        <div class="book">
-            <img src="{{ asset('storage/'.$book->image) }}" alt="{{ $book->book_name }}">
-            <div class="book-title">{{ $book->book_name }}</div>
-            <form action="{{ route('cart.add', ['book' => $book->book_id]) }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-primary">Add to Cart</button>
-            </form>
-        </div>
+        <a href="{{ route('book.show', ['id' => $book->book_id]) }}" >
+            <div class="book">
+                <img src="{{ asset('storage/'.$book->image) }}" alt="{{ $book->book_name }}">
+                <div class="book-title">{{ $book->book_name }}</div>
+                <form action="{{ route('cart.add', ['book' => $book->book_id]) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                </form>
+            </div>
+        </a>
+        
         @endforeach
     </div>
 </main>

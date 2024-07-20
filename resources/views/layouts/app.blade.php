@@ -156,14 +156,14 @@
                 <a href="{{ route('dashboard') }}">LOGO</a>
             </div>
             <nav>
-                <a href="#">HƯỚNG DẪN</a>
+                <a href="#">GUIDES</a>
                 <div class="dropdown">
                     <a href="#">GENRE</a>
                     <div class="dropdown-content">
                         @foreach ($genres->take(5) as $genre)
                         <a href="#">{{ $genre->genre_name }}</a>
-                    @endforeach
-                    <a href="#">More</a>
+                        @endforeach
+                        <a href="#">More</a>
                     </div>
                 </div>
                 <div class="dropdown">
@@ -171,8 +171,8 @@
                     <div class="dropdown-content">
                         @foreach ($authors->take(5) as $author)
                         <a href="#">{{ $author->first_name.' '.$author->last_name }}</a>
-                    @endforeach
-                    <a href="#">More</a>
+                        @endforeach
+                        <a href="#">More</a>
                     </div>
                 </div>
                 <div class="dropdown">
@@ -180,8 +180,8 @@
                     <div class="dropdown-content">
                         @foreach ($publishers->take(5) as $publisher)
                         <a href="#">{{ $publisher->publisher_name }}</a>
-                    @endforeach
-                    <a href="#">More</a>
+                        @endforeach
+                        <a href="#">More</a>
                     </div>
                 </div>
                 <div class="dropdown">
@@ -189,7 +189,7 @@
                     <div class="dropdown-content">
                         @foreach ($agegroups as $agegroup)
                         <a href="#">{{ $agegroup->age_group_name }}</a>
-                    @endforeach
+                        @endforeach
                     </div>
                 </div>
                 <a href="#"><i class="fas fa-search"></i></a>
@@ -197,9 +197,6 @@
                 <a href="{{ route('cart.index') }}"><i class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
-
-
-        
     </header>
     
     <main class="content">
@@ -210,34 +207,32 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>LOGO</h3>
-                <p>Địa chỉ: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <p>Hỗ trợ tư vấn: <br> Điện thoại: 0987654321 <br> Email: abc@gmail.com</p>
+                <p>Address: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Support: <br> Phone: 0987654321 <br> Email: abc@gmail.com</p>
             </div>
             <div class="footer-section">
-                <h3>Chính sách</h3>
-                <a href="#">hushushusuh</a>
-                <a href="#">hushushusuh</a>
-                <a href="#">hushushusuh</a>
-                <a href="#">hushushusuh</a>
-                <a href="#">hushushusuh</a>
+                <h3>Policies</h3>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Refund Policy</a>
+                <a href="#">Shipping Policy</a>
+                <a href="#">FAQs</a>
             </div>
             <div class="footer-section">
-                <h3>Hỗ trợ khách hàng</h3>
-                <a href="#">hushushusuh</a>
-                <a href="#">hushushusuh</a>
-                <a href="#">hushushusuh</a>
-                <a href="#">hushushusuh</a>
-                <a href="#">hushushusuh</a>
+                <h3>Customer Support</h3>
+                <a href="#">Contact Us</a>
+                <a href="#">Returns</a>
+                <a href="#">Order Tracking</a>
+                <a href="#">Help Center</a>
+                <a href="#">Live Chat</a>
             </div>
             <div class="footer-section">
-                <h3>Xem thêm</h3>
-                <a href="#"><img src="appstore.png" alt="App Store"></a>
-                <a href="#"><img src="googleplay.png" alt="Google Play"></a>
+                <h3>More</h3>
                 <div class="social-media">
-                    <a href="#"><i class="icon-facebook"></i></a>
-                    <a href="#"><i class="icon-instagram"></i></a>
-                    <a href="#"><i class="icon-twitter"></i></a>
-                    <a href="#"><i class="icon-youtube"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>

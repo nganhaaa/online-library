@@ -6,38 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Publisher;
 use App\Models\Genre;
 use App\Models\Author;
+use App\Models\Book;
 
 class FrontEndController extends Controller
 {
-    /**
-     * Display the specified resource.
-     */
-    public function show($model, $id)
+    // public function show(Book $book)
+    // {
+    //     return view('books.show', compact('book'));
+    // }
+
+    public function show($id)
     {
-        $item = null;
-        $view = '';
-
-        switch ($model) {
-            case 'publisher':
-                $item = Publisher::findOrFail($id);
-                $view = 'publishers.show';
-                break;
-            case 'genre':
-                $item = Genre::findOrFail($id);
-                $view = 'genres.show';
-                break;
-            case 'author':
-                $item = Author::findOrFail($id);
-                $view = 'authors.show';
-                break;
-            // Add more cases for other models as needed
-            default:
-                abort(404);
-        }
-
-        return view($view, compact('item'));
+        // Fetch the book model by ID
+        $book = Book::findOrFail($id);
+        
+        // Pass data to the view
+        return view('book.show', compact('book'));
     }
-
      /**
      * Display a listing of items based on model.
      *

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\GenreController;
 use App\Http\Controllers\Admin\PublisherController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\FrontEndController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -41,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::patch('/cart/update/{book}', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/borrow', [CartController::class, 'createBorrowingReceipt'])->name('cart.borrow');
+    Route::get('/book/{id}', [FrontEndController::class, 'show'])->name('book.show');
 });
 
 require __DIR__.'/auth.php';
