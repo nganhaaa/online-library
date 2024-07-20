@@ -16,27 +16,45 @@ class CartController extends Controller
         return view('cart.index', compact('cartItems'));
     }
 
-    public function add(Request $request, $book_id)
+    public function add(Request $request, $bookId)
     {
-        $book = Book::findOrFail($book_id);
-
-        $cartItem = Cart::where('user_id', Auth::id())
-            ->where('book_id', $book_id)
-            ->first();
-
-        if ($cartItem) {
-            $cartItem->quantity += 1;
-            $cartItem->save();
-        } else {
-            Cart::create([
-                'user_id' => Auth::id(),
-                'book_id' => $book_id,
-                'quantity' => 1
-            ]);
+        // Validate the request (optional)
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+    
+        // Find the book by its ID
+        $book = Book::find($bookId);
+        if (!$book) {
+            return redirect()->back()->with('error', 'Book not found.');
         }
-
-        return redirect()->route('cart.index')->with('success', 'Book added to cart.');
+    
+        // Initialize cart in session if not already set
+        if (!$request->session()->has('cart')) {
+            $request->session()->put('cart', []);
+        }
+    
+        // Get the current cart from session
+        $cart = $request->session()->get('cart');
+    
+        // Check if the book is already in the cart
+        if (isset($cart[$bookId])) {
+            // Update quantity if book is already in the cart
+            $cart[$bookId]['quantity'] += $request->input('quantity', 1);
+        } else {
+            // Add new book to the cart
+            $cart[$bookId] = [
+                'book' => $book,
+                'quantity' => $request->input('quantity', 1),
+            ];
+        }
+    
+        // Save the updated cart back to session
+        $request->session()->put('cart', $cart);
+    
+        return redirect()->back()->with('success', 'Book added to cart!');
     }
+    
 
     public function remove($id)
     {

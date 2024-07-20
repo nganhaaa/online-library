@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\FrontEndController;
+
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\BookController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\GenreController;
-use App\Http\Controllers\AuthorController;
-use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\BookController;
+use App\Http\Controllers\Admin\GenreController;
+use App\Http\Controllers\Admin\PublisherController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,23 +35,23 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     ]);
 });
 
-Route::get('/', [FrontEndController::class, 'genresIndex']);
+// Route::get('/', [FrontEndController::class, 'genresIndex']);
 
-// Books
-Route::get('/books', [FrontEndController::class, 'booksIndex'])->name('books.index');
-Route::get('/books/{book}', [FrontEndController::class, 'booksShow'])->name('books.show');
+// // Books
+// Route::get('/books', [FrontEndController::class, 'booksIndex'])->name('books.index');
+// Route::get('/books/{book}', [FrontEndController::class, 'booksShow'])->name('books.show');
 
-// Genres
-Route::get('/genres', [FrontEndController::class, 'genresIndex'])->name('genres.index');
-Route::get('/genres/{genre}', [FrontEndController::class, 'genresShow'])->name('genres.show');
+// // Genres
+// Route::get('/genres', [FrontEndController::class, 'genresIndex'])->name('genres.index');
+// Route::get('/genres/{genre}', [FrontEndController::class, 'genresShow'])->name('genres.show');
 
-// Authors
-Route::get('/authors', [FrontEndController::class, 'authorsIndex'])->name('authors.index');
-Route::get('/authors/{author}', [FrontEndController::class, 'authorsShow'])->name('authors.show');
+// // Authors
+// Route::get('/authors', [FrontEndController::class, 'authorsIndex'])->name('authors.index');
+// Route::get('/authors/{author}', [FrontEndController::class, 'authorsShow'])->name('authors.show');
 
-// Publishers
-Route::get('/publishers', [FrontEndController::class, 'publishersIndex'])->name('publishers.index');
-Route::get('/publishers/{publisher}', [FrontEndController::class, 'publishersShow'])->name('publishers.show');
+// // Publishers
+// Route::get('/publishers', [FrontEndController::class, 'publishersIndex'])->name('publishers.index');
+// Route::get('/publishers/{publisher}', [FrontEndController::class, 'publishersShow'])->name('publishers.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

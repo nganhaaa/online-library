@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="cart-container">
     <h1>Your Cart</h1>
     @if (session('success'))
         <div class="alert alert-success">
@@ -42,4 +42,28 @@
         <button type="submit" class="btn btn-primary">Create Borrowing Receipt</button>
     </form>
 </div>
+
+<style>
+    /* Your custom CSS styles */
+    .cart-container {
+        /* Example styles */
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .table {
+        /* Example table styles */
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .table th, .table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+</style>
+
 @endsection

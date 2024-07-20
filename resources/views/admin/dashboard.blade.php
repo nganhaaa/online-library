@@ -17,6 +17,8 @@
                     <a href="{{ route('books.index') }}">Books</a>
                     <a href="{{ route('genres.index') }}">Genres</a>
                     <a href="{{ route('authors.index') }}">Authors</a>
+                    <a href="{{ route('publishers.index') }}">Publishers</a>
+                    <a href="{{ route('users.index') }}">Users</a>
                 </nav>
             </div>
         </header>

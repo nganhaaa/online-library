@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Library</title>
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -152,7 +153,7 @@
     <header class="header-container">
         <div class="container">
             <div class="logo">
-                <a href="#">LOGO</a>
+                <a href="{{ route('dashboard') }}">LOGO</a>
             </div>
             <nav>
                 <a href="#">HƯỚNG DẪN</a>
@@ -162,27 +163,47 @@
                         @foreach ($genres->take(5) as $genre)
                         <a href="#">{{ $genre->genre_name }}</a>
                     @endforeach
+                    <a href="#">More</a>
                     </div>
                 </div>
-                <a href="#">AUTHOR</a>
-                <a href="#">NXB</a>
                 <div class="dropdown">
-                    <a href="#">NHÓM TUỔI</a>
+                    <a href="#">AUTHOR</a>
                     <div class="dropdown-content">
-                        <a href="#">Nhóm tuổi 1</a>
-                        <a href="#">Nhóm tuổi 2</a>
+                        @foreach ($authors->take(5) as $author)
+                        <a href="#">{{ $author->first_name.' '.$author->last_name }}</a>
+                    @endforeach
+                    <a href="#">More</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="#">PUBLISHER</a>
+                    <div class="dropdown-content">
+                        @foreach ($publishers->take(5) as $publisher)
+                        <a href="#">{{ $publisher->publisher_name }}</a>
+                    @endforeach
+                    <a href="#">More</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="#">AGE GROUP</a>
+                    <div class="dropdown-content">
+                        @foreach ($agegroups as $agegroup)
+                        <a href="#">{{ $agegroup->age_group_name }}</a>
+                    @endforeach
                     </div>
                 </div>
                 <a href="#"><i class="fas fa-search"></i></a>
-<a href="#"><i class="fas fa-user"></i></a>
-<a href="#"><i class="fas fa-shopping-cart"></i></a>
+                <a href="#"><i class="fas fa-user"></i></a>
+                <a href="{{ route('cart.index') }}"><i class="fas fa-shopping-cart"></i></a>
             </nav>
         </div>
+
+
+        
     </header>
     
     <main class="content">
-        <!-- Your main content here -->
-        <img src="your-image-path.png" alt="Sách mới cập nhật">
+        @yield('content')
     </main>
     
     <footer class="footer-container">

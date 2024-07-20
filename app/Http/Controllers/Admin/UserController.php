@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -51,17 +52,17 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'is_admin' => 'boolean',
         ]);
-
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'is_admin' => $request->is_admin ?? $user->is_admin,
-        ]);
-
+    
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->is_admin = $request->is_admin ?? $user->is_admin;
+    
         if ($request->filled('password')) {
-            $user->update(['password' => Hash::make($request->password)]);
+            $user->password = Hash::make($request->password);
         }
-
+    
+        $user->save();
+    
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Author;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,7 @@ class AuthorController extends Controller
 
         Author::create($request->all());
 
-        return redirect()->route('authors.index')
+        return redirect()->route('admin.authors.index')
             ->with('success', 'Author created successfully.');
     }
 
@@ -87,7 +88,7 @@ class AuthorController extends Controller
 
         $author->update($request->all());
 
-        return redirect()->route('authors.index')
+        return redirect()->route('admin.authors.index')
             ->with('success', 'Author updated successfully.');
     }
 
@@ -101,7 +102,7 @@ class AuthorController extends Controller
     {
         $author->delete();
 
-        return redirect()->route('authors.index')
+        return redirect()->route('admin.authors.index')
             ->with('success', 'Author deleted successfully.');
     }
 }

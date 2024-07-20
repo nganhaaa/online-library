@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AgeGroup;
 use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         View::share('authors', Author::all());
         View::share('books', Book::all());
         View::share('genres', Genre::all());
-        // View::share('publishers', Publisher::all());
+        View::share('publishers', Publisher::all());
+        View::share('agegroups', AgeGroup::all());
     }
 }

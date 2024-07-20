@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Publisher;
 use Illuminate\Http\Request;
 
@@ -10,12 +11,12 @@ class PublisherController extends Controller
     public function index()
     {
         $publishers = Publisher::all();
-        return view('publishers.index', compact('publishers'));
+        return view('admin.publishers.index', compact('publishers'));
     }
 
     public function create()
     {
-        return view('publishers.create');
+        return view('admin.publishers.create');
     }
 
     public function store(Request $request)
@@ -28,17 +29,17 @@ class PublisherController extends Controller
 
         Publisher::create($request->all());
 
-        return redirect()->route('publishers.index')->with('success', 'Publisher created successfully.');
+        return redirect()->route('admin.publishers.index')->with('success', 'Publisher created successfully.');
     }
 
     public function show(Publisher $publisher)
     {
-        return view('publishers.show', compact('publisher'));
+        return view('admin.publishers.show', compact('publisher'));
     }
 
     public function edit(Publisher $publisher)
     {
-        return view('publishers.edit', compact('publisher'));
+        return view('admin.publishers.edit', compact('publisher'));
     }
 
     public function update(Request $request, Publisher $publisher)
@@ -51,12 +52,12 @@ class PublisherController extends Controller
 
         $publisher->update($request->all());
 
-        return redirect()->route('publishers.index')->with('success', 'Publisher updated successfully.');
+        return redirect()->route('admin.publishers.index')->with('success', 'Publisher updated successfully.');
     }
 
     public function destroy(Publisher $publisher)
     {
         $publisher->delete();
-        return redirect()->route('publishers.index')->with('success', 'Publisher deleted successfully.');
+        return redirect()->route('admin.publishers.index')->with('success', 'Publisher deleted successfully.');
     }
 }
