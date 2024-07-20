@@ -195,6 +195,10 @@
                 <a href="#"><i class="fas fa-search"></i></a>
                 <a href="#"><i class="fas fa-user"></i></a>
                 <a href="{{ route('cart.index') }}"><i class="fas fa-shopping-cart"></i></a>
+                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; color: #333; cursor: pointer;">Log Out</button>
+                </form>
             </nav>
         </div>
     </header>
