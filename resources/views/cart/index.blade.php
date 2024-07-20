@@ -24,10 +24,10 @@
         <tbody>
             @foreach ($cartItems as $item)
             <tr>
-                <td>{{ $item['book']->book_name }}</td>
+                <td>{{ $item['book']->book_name ?? 'Unknown Book' }}</td>
                 <td>{{ $item['quantity'] }}</td>
                 <td>
-                    <form action="{{ route('cart.remove', $item['book']->book_id) }}" method="POST">
+                    <form action="{{ route('cart.remove', [$item['book']->book_id ?? '']) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Remove</button>
@@ -44,7 +44,6 @@
 </div>
 
 <style>
-    /* Your custom CSS styles */
     .cart-container {
         margin-top: 20px;
         padding: 20px;

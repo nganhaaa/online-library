@@ -8,23 +8,40 @@ use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
+    /**
+     * Display the cart contents.
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
     public function index(Request $request)
     {
         // Retrieve cart items from session
         $cartItems = $request->session()->get('cart', []);
-        $books = Book::whereIn('book_id', array_keys($cartItems))->get()->keyBy('book_id');
+        $bookIds = array_column($cartItems, 'book_id');
+        $books = Book::whereIn('book_id', $bookIds)->get()->keyBy('book_id');
 
         // Merge cart items with book details
         foreach ($cartItems as $bookId => $item) {
             if (isset($books[$bookId])) {
                 $item['book'] = $books[$bookId];
+            } else {
+                $item['book'] = null; // Handle case where book is not found
             }
+            $cartItems[$bookId] = $item;
         }
 
         // Pass cart items to the view
         return view('cart.index', compact('cartItems'));
     }
 
+    /**
+     * Add a book to the cart.
+     *
+     * @param Request $request
+     * @param string $bookId
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function add(Request $request, $bookId)
     {
         Log::info('Add to cart method called with book ID: ' . $bookId);
@@ -63,11 +80,18 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Book added to cart!');
     }
 
+    /**
+     * Remove a book from the cart.
+     *
+     * @param string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function remove($id)
     {
         $cart = session('cart', []);
         if (isset($cart[$id])) {
-            $book = Book::find($id);
+            $bookId = $cart[$id]['book_id'];
+            $book = Book::find($bookId);
             if ($book) {
                 $book->available += $cart[$id]['quantity'];
                 $book->save();
@@ -78,6 +102,12 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Book removed from cart!');
     }
 
+    /**
+     * Create a borrowing receipt and clear the cart.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function createBorrowingReceipt(Request $request)
     {
         // Handle the creation of borrowing receipt
