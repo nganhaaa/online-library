@@ -1,6 +1,3 @@
-Sure, here's the content formatted for a `README.md` file:
-
-```markdown
 # Online Library System
 
 ## Project Overview
