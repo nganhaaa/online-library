@@ -1,74 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-<main>
-    <div class="book-container">
-        <!-- Example books, replace with dynamic content as needed -->
+<main class="flex w-full">
+    <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10 p-5">
         @foreach($books as $book)
-        <a href="{{ route('book.show', ['id' => $book->book_id]) }}" >
-            <div class="book">
-                <img src="{{ asset('storage/'.$book->image) }}" alt="{{ $book->book_name }}">
-                <div class="book-title">{{ $book->book_name }}</div>
-                <form action="{{ route('cart.add', ['book' => $book->book_id]) }}" method="POST">
+        <a href="{{ route('book.show', ['id' => $book->book_id]) }}" class="mb-4">
+            <div class="flex flex-col justify-between w-full p-4 border border-gray-300 rounded-lg text-center transition-transform transform hover:scale-105 h-full bg-[#f9b6f8] ">
+                <div>
+                    <img src="{{ asset('storage/'.$book->image) }}" alt="{{ $book->book_name }}" class="w-full h-auto">
+                    <div class="mt-2 font-bold text-md font-serif">{{ $book->book_name }}</div>
+                </div>
+                <form action="{{ route('cart.add', ['book' => $book->book_id]) }}" method="POST" class="mt-2">
                     @csrf
-                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                    <button type="submit" class="inline-block py-2 px-4 font-bold text-white bg-[#f05fed] rounded hover:bg-[#dc00c2] transition-colors w-full">
+                        Add to Cart
+                    </button>
                 </form>
             </div>
         </a>
-        
         @endforeach
     </div>
 </main>
 @endsection
-
-<style>
-    .book-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px; /* Space between rows and columns */
-        padding: 20px;
-    }
-
-    .book {
-        width: 200px;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        text-align: center;
-        transition: transform 0.2s;
-        position: relative;
-    }
-
-    .book img {
-        width: 100%;
-        height: auto;
-    }
-
-    .book:hover {
-        transform: scale(1.05);
-    }
-
-    .book-title {
-        font-size: 16px;
-        font-weight: bold;
-        margin: 10px 0;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 10px 15px;
-        font-size: 14px;
-        font-weight: bold;
-        color: #fff;
-        background-color: #f05fed;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-
-    .btn:hover {
-        background-color: #e71fd0;
-    }
-</style>
