@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::share('authors', Author::all());
-        View::share('books', Book::all());
+        View::share('books', Book::paginate(10)->onEachSide(3));
         View::share('genres', Genre::all());
         View::share('publishers', Publisher::all());
         View::share('agegroups', AgeGroup::all());

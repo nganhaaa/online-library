@@ -8,12 +8,19 @@ use App\Models\Genre;
 use App\Models\Author;
 use App\Models\Book;
 
+
 class FrontEndController extends Controller
 {
     // public function show(Book $book)
     // {
     //     return view('books.show', compact('book'));
     // }
+
+    public function index()
+    {
+        $books = Book::paginate(2);
+        return view('book.index', compact('books'));
+    }
 
     public function show($id)
     {
