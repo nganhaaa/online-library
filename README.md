@@ -78,7 +78,7 @@ The Online Library System is a comprehensive web application designed to transfo
 
 ## Usage
 
-- Access the application via `http://localhost:8000`.
+- Access the application via `http://127.0.0.1:8000`.
 - Register as a user or log in as an administrator.
 - Explore the book catalog, borrow books, and manage your account.
 - Admins can manage the library's resources and generate reports through the admin dashboard.
@@ -86,7 +86,7 @@ The Online Library System is a comprehensive web application designed to transfo
 ## Technologies Used
 
 - **Backend**: Laravel (PHP Framework)
-- **Frontend**: Blade Templating Engine, HTML, CSS, JavaScript
+- **Frontend**: React (TypeScript) on the develop branch, Blade Templating Engine, HTML, Tailwind CSS, JavaScript
 - **Database**: MySQL or PostgreSQL
 - **Authentication**: Laravel Breeze
 - **Version Control**: Git
