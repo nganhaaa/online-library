@@ -35,10 +35,16 @@ class BookController extends Controller
             $query->where('publisher_id', $publisherId);
         }
 
-        $books = $query->orderBy('name', 'asc')->get();
-
+        $books = $query->orderBy('name', 'asc')->paginate(10)
+        ->onEachSide(1);
+        $books->additional([
+            'meta' => [
+                'key' => 'value',  // Add any additional metadata here
+            ]
+        ]);
+    
         return Inertia::render('Book/Index', [
-            'books' => BookResource::collection($books),
+            'books' => $books,  // Pass the raw paginated object
         ]);
     }
 

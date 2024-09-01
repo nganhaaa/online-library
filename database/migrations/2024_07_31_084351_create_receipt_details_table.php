@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('receipt_details', function (Blueprint $table) {
             $table->foreignId('receipt_id')
-                  ->constrained('book_receipts')
+                  ->constrained('borrow_receipts')
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
             $table->foreignId('book_id')

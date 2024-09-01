@@ -23,10 +23,18 @@ class BookResource extends JsonResource
             'quantity' => $this->quantity,
             'price' => $this->price,
             'image' => $this->image,
-            'age_group' => new AgeGroupResource($this->whenLoaded('ageGroup')),
-            'publisher' => new PublisherResource($this->whenLoaded('publisher')),
-            'authors' => AuthorResource::collection($this->whenLoaded('authors')),
-            'genres' => GenreResource::collection($this->whenLoaded('genres')),
+            'age_group' => $this->whenLoaded('ageGroup', function () {
+                return $this->ageGroup->name;
+            }),
+            'publisher' => $this->whenLoaded('publisher', function () {
+                return $this->publisher->name;
+            }),
+            'authors' => $this->whenLoaded('authors', function () {
+                return $this->authors->pluck('name');
+            }),
+            'genres' => $this->whenLoaded('genres', function () {
+                return $this->genres->pluck('name');
+            }),
         ];
     }
 }
