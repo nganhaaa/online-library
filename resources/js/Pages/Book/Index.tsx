@@ -1,32 +1,19 @@
 import { Link, router } from '@inertiajs/react';
-import { Book } from '@/types';
+import { Book, PaginatedBooks } from '@/types';
 import { PropsWithChildren, useState } from 'react';
 import Pagination from '@/Components/Pagination';
 
-interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-  }
-
-interface PaginatedBooks {
-    data: Book[];
-    meta: {
-        links: PaginationLink[];
-    };
-};
-
 export default function Index({ books }: PropsWithChildren<{ books: PaginatedBooks }>) {
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [submittingBookId, setSubmittingBookId] = useState<number | null>(null);
 
     const handleAddToCart = async (bookId: number) => {
-        setIsSubmitting(true);
+        setSubmittingBookId(bookId);
         try {
-            await router.post(route("cart.add", bookId));
+            router.post(route('cart.add', bookId));
         } catch (error) {
             console.error('Error adding to cart:', error);
         } finally {
-            setIsSubmitting(false);
+            setSubmittingBookId(null);
         }
     };
 
@@ -38,7 +25,8 @@ export default function Index({ books }: PropsWithChildren<{ books: PaginatedBoo
                         key={book.id}
                         className="mb-4 flex flex-col justify-between w-full p-4 border border-gray-300 rounded-lg text-center transition-transform transform hover:scale-105 h-full"
                     >
-                        <Link href={`/books/${book.id}`} className="block">
+                        
+                        <Link href={route('book.show', book.id)} className="block">
                             <img
                                 src={`/storage/${book.image}`}
                                 alt={book.name}
@@ -49,9 +37,9 @@ export default function Index({ books }: PropsWithChildren<{ books: PaginatedBoo
                         <button
                             onClick={() => handleAddToCart(book.id)}
                             className="inline-block py-2 px-4 font-bold text-white bg-[#f05fed] rounded hover:bg-[#dc00c2] transition-colors w-full mt-2"
-                            disabled={isSubmitting}
+                            disabled={submittingBookId === book.id}
                         >
-                            {isSubmitting ? 'Adding...' : 'Add to Cart'}
+                            {submittingBookId === book.id ? 'Adding...' : 'Add to Cart'}
                         </button>
                     </div>
                 ))}

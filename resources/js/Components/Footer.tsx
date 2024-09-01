@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/react';
 
 export default function Footer() {
     return (
-        <footer className="w-full bg-[#2e2e2e]">
+        <footer className="w-full bg-[#2e2e2e] mt-5 bottom-0">
             <div className="container mx-20 mb-auto flex flex-wrap items-start justify-between px-10 py-4 text-white">
                 <div className="">
                     <h3>LOGO</h3>

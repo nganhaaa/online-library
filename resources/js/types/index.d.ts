@@ -14,8 +14,8 @@ export interface Book {
     quantity: number;
     price: number;
     image: string;
-    age_group: string; // Assuming it's a string like the age group name
-    publisher: string; // Assuming it's a string like the publisher name
+    age_group: string; 
+    publisher: string; 
     authors: string[]; // Array of author names
     genres: string[]; // Array of genre names
     
@@ -46,12 +46,6 @@ export interface AgeGroup {
     max_age: number;
 }
 
-export interface HeaderProps {
-    genres: Genre[];
-    authors: Author[];
-    publishers: Publisher[];
-    agegroups: AgeGroup[];
-}
 
 
 
@@ -60,3 +54,27 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         user: User;
     };
 };
+
+export interface HeaderProps extends PageProps{
+    genres: {
+        data: Genre[],}
+    authors: {
+        data:Author[],}
+    publishers: {
+        data:Publisher[],}
+    agegroups: {
+        data:AgeGroup[],}
+}
+
+export interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+  }
+
+export interface PaginatedBooks {
+    data: Book[];
+    meta: {
+        links: PaginationLink[]
+    };
+}

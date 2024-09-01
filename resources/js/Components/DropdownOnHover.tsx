@@ -2,6 +2,7 @@ import { useState, createContext, useContext, PropsWithChildren, Dispatch, SetSt
 import { Link, InertiaLinkProps } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 
+// Context to manage the open state and mouse events
 const DropDownContext = createContext<{
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
@@ -14,53 +15,58 @@ const DropDownContext = createContext<{
     handleMouseLeave: () => {},
 });
 
-const Dropdown = ({ children }: PropsWithChildren) => {
+const DropdownOnHover = ({ children }: PropsWithChildren) => {
     const [open, setOpen] = useState(false);
 
+    // Open the dropdown on mouse enter
     const handleMouseEnter = () => {
-        setOpen(true); 
+        setOpen(true);
     };
 
+    // Close the dropdown on mouse leave
     const handleMouseLeave = () => {
         setOpen(false);
     };
 
     return (
-        <DropDownContext.Provider value={{ open, setOpen, handleMouseEnter,  handleMouseLeave}}>
+        <DropDownContext.Provider value={{ open, setOpen, handleMouseEnter, handleMouseLeave }}>
             <div className="relative">{children}</div>
         </DropDownContext.Provider>
     );
 };
 
+// Trigger component for dropdown, opens on hover
 const Trigger = ({ children }: PropsWithChildren) => {
-    const { open, setOpen, handleMouseEnter,  handleMouseLeave } = useContext(DropDownContext);
+    const { handleMouseEnter, handleMouseLeave } = useContext(DropDownContext);
 
     return (
         <>
-            <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>{children}</div>
-
-
-            {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)}></div>}
+            <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                {children}
+            </div>
         </>
     );
 };
 
-const Content = ({ align = 'left', width = '48', contentClasses = 'py-1 bg-white', children }: PropsWithChildren<{ align?: 'left'|'right', width?: '48', contentClasses?: string }>) => {
-    const { open, setOpen } = useContext(DropDownContext);
+// Content component for dropdown content
+const Content = ({
+    align = 'left',
+    width = '48',
+    contentClasses = 'py-1 bg-white',
+    children,
+}: PropsWithChildren<{ align?: 'left' | 'right'; width?: '48'; contentClasses?: string }>) => {
+    const { open, handleMouseEnter, handleMouseLeave } = useContext(DropDownContext);
 
+    // Determine alignment classes
     let alignmentClasses = 'origin-top';
-
     if (align === 'left') {
         alignmentClasses = 'ltr:origin-top-left rtl:origin-top-right start-0';
     } else if (align === 'right') {
         alignmentClasses = 'ltr:origin-top-right rtl:origin-top-left end-0';
     }
 
-    let widthClasses = '';
-
-    if (width === '48') {
-        widthClasses = 'w-48';
-    }
+    // Determine width classes
+    const widthClasses = width === '48' ? 'w-48' : '';
 
     return (
         <>
@@ -75,15 +81,17 @@ const Content = ({ align = 'left', width = '48', contentClasses = 'py-1 bg-white
             >
                 <div
                     className={`absolute z-50 mt-2 rounded-md shadow-lg ${alignmentClasses} ${widthClasses}`}
-                    onClick={() => setOpen(false)}
+                    onMouseEnter={handleMouseEnter} // Keep the dropdown open when hovering over content
+                    onMouseLeave={handleMouseLeave} // Close the dropdown when leaving the content
                 >
-                    <div className={`rounded-md ring-1 ring-black ring-opacity-5 ` + contentClasses}>{children}</div>
+                    <div className={`rounded-md ring-1 ring-black ring-opacity-5 ${contentClasses}`}>{children}</div>
                 </div>
             </Transition>
         </>
     );
 };
 
+// Link component within dropdown
 const DropdownLink = ({ className = '', children, ...props }: InertiaLinkProps) => {
     return (
         <Link
@@ -98,8 +106,9 @@ const DropdownLink = ({ className = '', children, ...props }: InertiaLinkProps) 
     );
 };
 
-Dropdown.Trigger = Trigger;
-Dropdown.Content = Content;
-Dropdown.Link = DropdownLink;
+// Exporting subcomponents for ease of use
+DropdownOnHover.Trigger = Trigger;
+DropdownOnHover.Content = Content;
+DropdownOnHover.Link = DropdownLink;
 
-export default Dropdown;
+export default DropdownOnHover;

@@ -30,7 +30,9 @@ class BookResource extends JsonResource
                 return $this->publisher->name;
             }),
             'authors' => $this->whenLoaded('authors', function () {
-                return $this->authors->pluck('name');
+                return $this->authors->map(function ($author) {
+                    return $author->first_name . ' ' . $author->last_name;
+                });
             }),
             'genres' => $this->whenLoaded('genres', function () {
                 return $this->genres->pluck('name');

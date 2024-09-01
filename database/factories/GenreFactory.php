@@ -6,7 +6,7 @@ use App\Models\Genre;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Publisher>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Genre>
  */
 class GenreFactory extends Factory
 {
@@ -15,12 +15,27 @@ class GenreFactory extends Factory
      *
      * @return array<string, mixed>
      */
-
     public function definition()
     {
+        // List of meaningful genre names
+        $genres = [
+            'Science Fiction',
+            'Fantasy',
+            'Mystery',
+            'Romance',
+            'Thriller',
+            'Horror',
+            'Historical',
+            'Biography',
+            'Self-Help',
+            'Non-Fiction',
+        ];
+
+        // Randomly pick a genre from the list
+        $selectedGenre = $genres[array_rand($genres)];
+
         return [
-            'name' => $this->faker->word(), // You can customize this if needed
+            'name' => $selectedGenre,
         ];
     }
 }
-

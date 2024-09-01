@@ -16,22 +16,12 @@ class AgeGroupFactory extends Factory
      */
     public function definition(): array
     {
-
-        // 'name' => fake()->sentence(),
-        //     'description' => fake()->realText(),
-        //     'due_date' => fake()->dateTimeBetween('now', '+1 year'),
-        //     'status' => fake()
-        //         ->randomElement(['pending', 'in_progress', 'completed']),
-        //     'priority' => fake()
-        //         ->randomElement(['low', 'medium', 'high']),
-        //     'image_path' => fake()->imageUrl(),
-        //     'assigned_user_id' => fake()->randomElement([1, 2]),
-        //     'created_by' => 1,
-        //     'updated_by' => 1,
-        //     'created_at' => time(),
-        //     'updated_at' => time(),
         return [
-            //
+            'name' => fake()->word(),
+            'min_age' => $minAge = fake()->numberBetween(1, 100),
+            'max_age' => fake()->numberBetween($minAge, 100),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }
