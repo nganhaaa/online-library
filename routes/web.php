@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BorrowReceiptController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -27,5 +28,23 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('book', BookController::class);
 Route::resource('borrow-receipts', BorrowReceiptController::class);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+// Add a book to the cart
+Route::post('/cart/add/{bookId}/', [CartController::class, 'add'])->name('cart.add');
+
+// Remove a book from the cart
+Route::delete('/cart/remove/{bookId}', [CartController::class, 'remove'])->name('cart.remove');
+
+// Update the quantity of a book in the cart
+Route::patch('/cart/update/{bookId}', [CartController::class, 'update'])->name('cart.update');
+
+
+// Create a borrowing receipt and clear the cart
+Route::post('/cart/borrow', [CartController::class, 'createBorrowReceipt'])->name('cart.borrow');
+});
+
 
 require __DIR__.'/auth.php';

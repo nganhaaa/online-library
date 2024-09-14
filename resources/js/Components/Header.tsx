@@ -12,6 +12,7 @@ export default function Header({
     agegroups
 }: HeaderProps) {
     const [open, setOpen] = useState(false);
+
     // useEffect(() => {
     //     // Log the headerProps to see its structure
     //     console.log('Header Props:', genres);
@@ -22,7 +23,7 @@ export default function Header({
             <nav className="fixed left-0 right-0 top-0 z-40 w-full bg-white shadow">
                 <div className="container mx-20 flex items-center justify-between px-10 py-4">
                     {/* Mobile menu button */}
-                    <div className="mr-35 block lg:hidden">
+                    <div className="mr-35 block lg:hidden left-0 static">
                         <button
                             onClick={() => setOpen(!open)}
                             className="text-gray-800 hover:text-gray-600 focus:outline-none"
@@ -64,7 +65,7 @@ export default function Header({
                     
 
                     {/* Icons */}
-                    <div className="flex space-x-4">
+                    <div className="hidden lg:flex space-x-4">
                         <Link href="#">
                             <i className="fas fa-search"></i>
                         </Link>

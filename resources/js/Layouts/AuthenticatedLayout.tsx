@@ -16,15 +16,18 @@ export default function Authenticated({ user, header, children, headerProps }: P
             />
 
             {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {header}
+                <header className="bg-[#F6F6F6]">
+                    <div className="mx-10 pt-4 py-3 mb-5 px-7 sm:px-6 lg:px-8">
+                    <h2 className="font-medium text-gray-800 leading-tight ">
+                    {header}
+                </h2>
+                        
                     </div>
                 </header>
             )}
 
             <main>{children}</main>
-            <Footer />
+            <Footer/>
         </div>
     );
 }

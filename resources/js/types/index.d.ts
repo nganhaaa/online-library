@@ -10,7 +10,7 @@ export interface Book {
     name: string;
     description: string;
     publication_year: number;
-    available: boolean;
+    available: number;
     quantity: number;
     price: number;
     image: string;
@@ -47,7 +47,14 @@ export interface AgeGroup {
 }
 
 
+export interface SlideItem {
+    image: string;
+    alt: string;
+}
 
+export interface SlideProps {
+    items: SlideItem[];
+}
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {

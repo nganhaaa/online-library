@@ -5,40 +5,33 @@ import { Transition } from '@headlessui/react';
 const DropDownContext = createContext<{
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    handleMouseEnter: () => void;
-    handleMouseLeave: () => void;
+    toggleOpen: () => void;
 }>({
     open: false,
     setOpen: () => {},
-    handleMouseEnter: () => {},
-    handleMouseLeave: () => {},
+    toggleOpen: () => {},
 });
 
 const Dropdown = ({ children }: PropsWithChildren) => {
     const [open, setOpen] = useState(false);
 
-    const handleMouseEnter = () => {
-        setOpen(true); 
-    };
-
-    const handleMouseLeave = () => {
-        setOpen(false);
+    const toggleOpen = () => {
+        setOpen((previousState) => !previousState);
     };
 
     return (
-        <DropDownContext.Provider value={{ open, setOpen, handleMouseEnter,  handleMouseLeave}}>
+        <DropDownContext.Provider value={{ open, setOpen, toggleOpen }}>
             <div className="relative">{children}</div>
         </DropDownContext.Provider>
     );
 };
 
 const Trigger = ({ children }: PropsWithChildren) => {
-    const { open, setOpen, handleMouseEnter,  handleMouseLeave } = useContext(DropDownContext);
+    const { open, setOpen, toggleOpen } = useContext(DropDownContext);
 
     return (
         <>
-            <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>{children}</div>
-
+            <div onClick={toggleOpen}>{children}</div>
 
             {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)}></div>}
         </>

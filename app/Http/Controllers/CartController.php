@@ -47,45 +47,47 @@ class CartController extends Controller
      *
      * @param Request $request
      * @param string $bookId
+     * @param int $quantity
      * @return \Inertia\Response
      */
     public function add(Request $request, $bookId)
     {
-        // Log::info('Add to cart method called with book ID: ' . $bookId);
+        $quantity = $request->input('quantity', 1);
 
         $book = Book::find($bookId);
         if (!$book) {
             return redirect()->back()->with('error', 'Book not found.');
         }
-
-        if ($book->available <= 0) {
-            return redirect()->back()->with('error', 'Book is out of stock.');
-        }
-
-        $book->available -= 1;
-        $book->save();
-
+    
+        // Ensure cart exists in the session
         if (!$request->session()->has('cart')) {
             $request->session()->put('cart', []);
         }
-
+    
         $cart = $request->session()->get('cart');
-
-        if (isset($cart[$bookId])) {
-            $cart[$bookId]['quantity'] += 1;
-        } else {
+    
+        // Initial addition of book to the cart
+        if (!isset($cart[$bookId])) {
             $cart[$bookId] = [
-                'book_id' => $bookId, // Store only the book ID
-                'quantity' => 1,
+                'book_id' => $bookId,
+                'quantity' => $quantity,
             ];
+        } else {
+            if ($book->available >= ($cart[$bookId]['quantity']+ $quantity)) {
+                $cart[$bookId]['quantity']+= $quantity;
+            } else {
+                return redirect()->back()->with('error', 'Invalid operation or out of stock.');
+            }
+            
         }
-
+    
+        // Save the updated cart to the session
         $request->session()->put('cart', $cart);
-
-        // Log::info('Cart contents: ' . print_r($cart, true));
-
+    
         return redirect()->route('cart.index')->with('success', 'Book added to cart!');
     }
+    
+
 
     /**
      * Remove a book from the cart.
@@ -96,27 +98,37 @@ class CartController extends Controller
     public function remove($id)
     {
         $cart = session('cart', []);
-
+    
         if (!isset($cart[$id])) {
-            // Log::error("Attempted to remove book with ID $id that does not exist in cart.");
             return redirect()->route('cart.index')->with('error', 'Book not found in cart.');
         }
-
-        // Retrieve the book ID
-        $bookId = $cart[$id]['book_id'];
-        $book = Book::find($bookId);
-
-        if ($book) {
-            $book->available += $cart[$id]['quantity'];
-            $book->save();
+    
+        DB::beginTransaction();
+    
+        try {
+            // Retrieve the book ID and update availability
+            $bookId = $cart[$id]['book_id'];
+            $book = Book::find($bookId);
+    
+            if ($book) {
+                $book->available += $cart[$id]['quantity'];
+                $book->save();
+            }
+    
+            // Remove the book from the cart
+            unset($cart[$id]);
+            session()->put('cart', $cart);
+    
+            DB::commit();
+            
+            return redirect()->route('cart.index')->with('success', 'Book removed from cart!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error removing book from cart: ' . $e->getMessage());
+            return redirect()->route('cart.index')->with('error', 'An error occurred.');
         }
-
-        unset($cart[$id]);
-        session()->put('cart', $cart);
-
-        return redirect()->route('cart.index')->with('success', 'Book removed from cart!');
     }
-
+    
     /**
      * Update the quantity of a book in the cart.
      *
@@ -124,30 +136,41 @@ class CartController extends Controller
      * @param string $bookId
      * @return \Inertia\Response
      */
-    public function update(Request $request, $bookId)
-    {
-        $cart = session('cart', []);
-        $book = Book::find($bookId);
-
-        if (!isset($cart[$bookId])) {
-            return redirect()->route('cart.index')->with('error', 'Book not found in cart.');
-        }
-
-        $quantity = $cart[$bookId]['quantity'];
-
-        if ($request->action === 'increment') {
-            if ($quantity + 1 > $book->available) {
-                return redirect()->route('cart.index')->with('error', 'Exceeded available quantity');
-            }
-            $cart[$bookId]['quantity'] += 1;
-        } elseif ($request->action === 'decrement' && $quantity > 1) {
-            $cart[$bookId]['quantity'] -= 1;
-        }
-
-        session()->put('cart', $cart);
-
-        return redirect()->route('cart.index')->with('success', 'Cart updated successfully.');
+    public function update(Request $request, $id)
+{
+    $cart = session('cart', []);
+    $quantity = $request->input('quantity');
+    if (!isset($cart[$id])) {
+        return redirect()->route('cart.index')->with('error', 'Book not found in cart.');
     }
+
+    $bookId = $cart[$id]['book_id'];
+    $book = Book::find($bookId);
+
+    if ($book) {
+        DB::beginTransaction();
+
+        try {
+            if ($book->available >= $quantity) {
+                $cart[$id]['quantity'] = $quantity;
+            } else {
+                return redirect()->back()->with('error', 'Invalid operation or out of stock.');
+            }
+
+            session()->put('cart', $cart);
+            DB::commit();
+            
+            return redirect()->route('cart.index')->with('success', 'Quantity updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error updating cart: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred.');
+        }
+    }
+
+    return redirect()->route('cart.index')->with('error', 'Book not found.');
+}
+
 
     /**
      * Create a borrowing receipt and clear the cart.

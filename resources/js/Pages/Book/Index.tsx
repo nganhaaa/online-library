@@ -1,51 +1,40 @@
-import { Link, router } from '@inertiajs/react';
-import { Book, PaginatedBooks } from '@/types';
-import { PropsWithChildren, useState } from 'react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head } from '@inertiajs/react';
+import { PageProps, HeaderProps, PaginatedBooks } from '@/types';
+import CheckboxList from '@/Components/CheckboxList';
+import BookList from './BookList';
 import Pagination from '@/Components/Pagination';
 
-export default function Index({ books }: PropsWithChildren<{ books: PaginatedBooks }>) {
-    const [submittingBookId, setSubmittingBookId] = useState<number | null>(null);
+interface DashboardProps extends PageProps {
+    headerProps: HeaderProps;
+    books: PaginatedBooks;
+}
 
-    const handleAddToCart = async (bookId: number) => {
-        setSubmittingBookId(bookId);
-        try {
-            router.post(route('cart.add', bookId));
-        } catch (error) {
-            console.error('Error adding to cart:', error);
-        } finally {
-            setSubmittingBookId(null);
-        }
-    };
+export default function Index({ auth, headerProps, books }: DashboardProps) {
+
+    
+    const hasSidebar = headerProps.genres.data.length > 0; // Check if we have any genres to show in the checkbox
 
     return (
-        <div>
-            <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10 p-5">
-                {books.data.map((book) => (
-                    <div
-                        key={book.id}
-                        className="mb-4 flex flex-col justify-between w-full p-4 border border-gray-300 rounded-lg text-center transition-transform transform hover:scale-105 h-full"
-                    >
-                        
-                        <Link href={route('book.show', book.id)} className="block">
-                            <img
-                                src={`/storage/${book.image}`}
-                                alt={book.name}
-                                className="w-full h-auto"
-                            />
-                            <div className="mt-2 font-bold text-md font-serif">{book.name}</div>
-                        </Link>
-                        <button
-                            onClick={() => handleAddToCart(book.id)}
-                            className="inline-block py-2 px-4 font-bold text-white bg-[#f05fed] rounded hover:bg-[#dc00c2] transition-colors w-full mt-2"
-                            disabled={submittingBookId === book.id}
-                        >
-                            {submittingBookId === book.id ? 'Adding...' : 'Add to Cart'}
-                        </button>
+        <AuthenticatedLayout
+            user={auth.user}
+            headerProps={headerProps}
+        >
+            <Head title="Welcome" />
+            <div className='container flex w-full mx-auto px-4 py-6'>
+                {/* Conditionally render the sidebar if there are genres */}
+                {hasSidebar && (
+                    <div className='w-1/4 pr-4'>
+                        <CheckboxList checkboxItems={headerProps.genres.data} />
                     </div>
-                ))}
+                )}
+
+                {/* Adjust the BookList layout depending on if the sidebar is present */}
+                <div className={hasSidebar ? 'w-3/4' : 'w-full'}>
+                    <BookList books={books} hasSidebar={hasSidebar} />
+                </div>
             </div>
-            {/* Pass pagination links if available */}
             <Pagination links={books.meta.links} />
-        </div>
+        </AuthenticatedLayout>
     );
 }

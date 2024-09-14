@@ -36,25 +36,14 @@ class BookController extends Controller
         }
 
         $books = $query->orderBy('name', 'asc')->paginate(10)->onEachSide(1);
-        $books->additional([
-            'meta' => [
-                'key' => 'value',  // Add any additional metadata here
-            ]
-        ]);
-
-        
-    
         return Inertia::render('Book/Index', [
-            'books' => $books,  // Pass the raw paginated object
+            'books' => BookResource::collection($books),  // Pass the raw paginated object
         ]);
     }
 
     public function show($id)
 {
-    // Tìm sách với các quan hệ đã nạp trước
     $book = Book::with(['ageGroup', 'publisher', 'authors', 'genres'])->findOrFail($id);
-
-    // Trả về view hoặc component với dữ liệu sách
     return Inertia::render('Book/Show', [
         'book' => new BookResource($book),
     ]);
