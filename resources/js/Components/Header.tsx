@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "@inertiajs/react";
-import Dropdown from "@/Components/Dropdown";
+import { Link, router } from "@inertiajs/react";
 import { Genre, Author, Publisher, AgeGroup, HeaderProps } from "@/types";
 import DropdownWithData from "./DropdownWithData";
 import DropdownOnHover from "./DropdownOnHover";
+import ApplicationLogo from "./ApplicationLogo";
 
 export default function Header({
     genres,
@@ -12,12 +12,22 @@ export default function Header({
     agegroups
 }: HeaderProps) {
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // useEffect(() => {
-    //     // Log the headerProps to see its structure
-    //     console.log('Header Props:', genres);
-    //     // console.log('Genres:', headerProps.genres);
-    // }, [genres]);
+    // Function to handle logout
+    const handleLogout = async (e: React.FormEvent) => {
+        e.preventDefault(); // Prevent the default form submission
+        setIsLoading(true);
+        try {
+            await router.post(route('logout')); // Assuming your backend uses DELETE for logout
+        } catch (err) {
+            console.error('Error logging out:', err);
+            alert('Failed to log out.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <header className="w-full mb-14">
             <nav className="fixed left-0 right-0 top-0 z-40 w-full bg-white shadow">
@@ -48,7 +58,7 @@ export default function Header({
                     {/* Logo */}
                     <div>
                         <Link href="/dashboard" className="font-serif text-2xl">
-                            LOGO
+                        <ApplicationLogo className=" w-40 h-14 fill-current text-gray-500" />
                         </Link>
                     </div>
 
@@ -57,12 +67,11 @@ export default function Header({
                         <Link href="/dashboard">GUIDE</Link>
                     </div>
 
-                    
-                    <DropdownWithData title={"Genre"} data={genres}/>
-                    <DropdownWithData title={"Authors"} data={authors}/>
-                    <DropdownWithData title={"Publisher"} data={publishers}/>
-                    <DropdownWithData title={"Age Group"} data={agegroups}/>
-                    
+                    {/* Dropdowns */}
+                    <DropdownWithData title={"Genre"} data={genres} />
+                    <DropdownWithData title={"Authors"} data={authors} />
+                    <DropdownWithData title={"Publisher"} data={publishers} />
+                    <DropdownWithData title={"Age Group"} data={agegroups} />
 
                     {/* Icons */}
                     <div className="hidden lg:flex space-x-4">
@@ -80,29 +89,26 @@ export default function Header({
 
                             <DropdownOnHover.Content>
                                 <DropdownOnHover.Link
-                                    href="#"
+                                    href="/profile"
                                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                                 >
                                     Profile
                                 </DropdownOnHover.Link>
 
                                 <DropdownOnHover.Link
-                                    href="#"
+                                    href="/receipt"
                                     className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                                 >
                                     History
                                 </DropdownOnHover.Link>
 
-                                <form
-                                    action="/logout"
-                                    method="POST"
-                                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                >
+                                <form onSubmit={handleLogout} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                                     <button
                                         type="submit"
                                         className="w-full text-left"
+                                        disabled={isLoading}
                                     >
-                                        Log Out
+                                        {isLoading ? "Logging Out..." : "Log Out"}
                                     </button>
                                 </form>
                             </DropdownOnHover.Content>

@@ -7,15 +7,13 @@ interface BookListProps extends PropsWithChildren<{}> {
     hasSidebar: boolean; // Add a prop to indicate if the sidebar is present
 }
 
-export default function BookList({ books, hasSidebar }: BookListProps) {
+export default function Index({ books, hasSidebar }: BookListProps) {
     const [submittingBookId, setSubmittingBookId] = useState<number | null>(null);
 
-    const handleAddToCart = async (bookId: number) => {
+    const handleDelete = async (bookId: number) => {
         setSubmittingBookId(bookId);
         try {
-            await router.post(route("cart.add", { bookId, quantity: 1 }));
-            // Optional: You can show a success message here
-            alert('Book added to cart successfully!');
+            router.post(route("cart.add", { bookId, quantity: 1 }));
         } catch (error) {
             console.error('Error adding to cart:', error);
             alert('An error occurred while adding the book to the cart. Please try again later.');

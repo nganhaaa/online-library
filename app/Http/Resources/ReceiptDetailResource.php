@@ -15,7 +15,7 @@ class ReceiptDetailResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'receipt_id' => $this->receipt_id,
             'book_id' => $this->book_id,
             'quantity' => $this->quantity,
         ];

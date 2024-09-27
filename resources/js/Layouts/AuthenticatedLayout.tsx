@@ -10,13 +10,13 @@ import Footer from '@/Components/Footer';
 
 export default function Authenticated({ user, header, children, headerProps }: PropsWithChildren<{ user: User, header?: ReactNode, headerProps: HeaderProps }>) {
     return (
-        <div>
+        <div className="flex flex-col min-h-screen">
             <Header
                 {...headerProps} // Spread headerProps to the Header component
             />
 
             {header && (
-                <header className="bg-[#F6F6F6]">
+                <header className="bg-[#F6F6F6]  pt-10">
                     <div className="mx-10 pt-4 py-3 mb-5 px-7 sm:px-6 lg:px-8">
                     <h2 className="font-medium text-gray-800 leading-tight ">
                     {header}
@@ -26,7 +26,7 @@ export default function Authenticated({ user, header, children, headerProps }: P
                 </header>
             )}
 
-            <main>{children}</main>
+            <main className="flex-grow  pt-5">{children}</main>
             <Footer/>
         </div>
     );

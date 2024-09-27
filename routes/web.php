@@ -1,21 +1,22 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\BorrowReceiptController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -27,7 +28,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('book', BookController::class);
-Route::resource('borrow-receipts', BorrowReceiptController::class);
+Route::resource('receipt', BorrowReceiptController::class);
 
 Route::middleware('auth')->group(function () {
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

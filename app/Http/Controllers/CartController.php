@@ -84,7 +84,7 @@ class CartController extends Controller
         // Save the updated cart to the session
         $request->session()->put('cart', $cart);
     
-        return redirect()->route('cart.index')->with('success', 'Book added to cart!');
+        return redirect()->back()->with('success', 'Book added to cart!');
     }
     
 
@@ -183,55 +183,62 @@ class CartController extends Controller
         $cartItems = session('cart', []);
         $bookIds = array_column($cartItems, 'book_id');
         $books = Book::whereIn('id', $bookIds)->get()->keyBy('id');
-
+    
+        // Check if the user is logged in
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You need to log in to borrow books.');
+        }
+    
         // Check if there are items in the cart
         if (empty($cartItems)) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
         }
-
+    
         // Start a database transaction
         DB::beginTransaction();
-
+    
         try {
-            // Generate a unique receipt ID
-            $receiptId = uniqid();
-
             // Create a new borrowing receipt
-            BorrowReceipt::create([
-                'receipt_id' => $receiptId,
-                'member_account_id' => Auth::id(), // Assuming the user is logged in and has an ID
+            $borrowReceipt = BorrowReceipt::create([
+                'user_id' => Auth::id(), // Assuming the user is logged in and has an ID
                 'borrow_date' => now(),
                 'due_date' => now()->addDays(30),
                 'return_date' => null,
                 'status' => 'Pending'
             ]);
-
+    
+            // Retrieve the generated receipt ID
+            $receiptId = $borrowReceipt->id;
+    
             // Store borrowed books
             foreach ($cartItems as $bookId => $item) {
                 $item['book'] = $books[$bookId];
+    
                 // Create a record for each borrowed book
                 ReceiptDetail::create([
                     'receipt_id' => $receiptId,
                     'book_id' => $item['book']->id, // Book ID
                     'quantity' => $item['quantity'], // Quantity
+                    'status' => 'Pending'
                 ]);
             }
-
+    
             // Commit the transaction
             DB::commit();
-
+    
             // Clear the cart
             session()->forget('cart');
-
+            $cartItems = [];
             return redirect()->route('cart.index')->with('success', 'Borrowing receipt created successfully!');
         } catch (\Exception $e) {
             // Rollback the transaction if something goes wrong
             DB::rollBack();
-
+    
             // Optionally log the error or handle it as needed
-            // Log::error('Error creating borrowing receipt: ' . $e->getMessage());
-
+            Log::error('Error creating borrowing receipt: ' . $e->getMessage());
+    
             return redirect()->route('cart.index')->with('error', 'Failed to create borrowing receipt. Please try again.');
         }
     }
+    
 }

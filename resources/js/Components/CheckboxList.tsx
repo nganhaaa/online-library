@@ -1,33 +1,40 @@
-import React, { useState } from 'react';
-import Checkbox from './Checkbox';
-
-interface CheckboxItem {
-    id: number;
-    name: string;
-}
+import { useState, useEffect } from 'react';
 
 interface CheckboxListProps {
-    checkboxItems: CheckboxItem[];
-} 
+    checkboxItems: { id: number; name: string; type: string }[];
+    onCheck?: number; // Set default checked value
+    onChange: (selectedItems: number[]) => void;
+}
 
-export default function CheckboxList({checkboxItems}:CheckboxListProps) {
-    const [checkedItems, setCheckedItems] = useState<number[]>([]);
+export default function CheckboxList({ checkboxItems, onCheck, onChange }: CheckboxListProps) {
+    const [selectedItem, setSelectedItem] = useState<number | null>(null);
 
-    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const itemId = parseInt(event.target.value);
-        setCheckedItems(prevState =>
-            event.target.checked
-                ? [...prevState, itemId]
-                : prevState.filter(id => id !== itemId)
-        );
+    useEffect(() => {
+        // Set the initial state based on the onCheck prop
+        if (onCheck) {
+            setSelectedItem(onCheck);
+        }
+    }, [onCheck]);
+
+    const handleCheckboxChange = (id: number) => {
+        // If the clicked checkbox is already selected, deselect it; otherwise, select it
+        const newSelectedItem = selectedItem === id ? null : id;
+        setSelectedItem(newSelectedItem);
+        onChange(newSelectedItem ? [newSelectedItem] : []); // Pass selected item to parent
     };
 
     return (
         <div>
-            {checkboxItems.map(item => (
-            <p><Checkbox value={item.id} onChange={handleCheckboxChange}/>{item.name}</p>
+            {checkboxItems.map((item) => (
+                <label key={item.id} className="block">
+                    <input
+                        type="checkbox"
+                        checked={selectedItem === item.id}
+                        onChange={() => handleCheckboxChange(item.id)}
+                    />
+                    {item.name}
+                </label>
             ))}
-            <p>Checked Items: {checkedItems.join(', ')}</p>
         </div>
     );
 }

@@ -83,6 +83,14 @@ export default function Login({ status, canResetPassword }: { status?: string, c
                         </Link>
                     )}
 
+                    {/* Add Register Button */}
+                    <Link
+                        href={route('register')}
+                        className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ms-4"
+                    >
+                        Register
+                    </Link>
+
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Log in
                     </PrimaryButton>

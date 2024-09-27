@@ -15,7 +15,7 @@ class BorrowReceiptResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'receipt_id' => $this->receipt_id,
+            'id' => $this->id,
             'borrow_date' => $this->borrow_date,
             'due_date' => $this->due_date,
             'return_date' => $this->return_date,

@@ -43,7 +43,7 @@ class BorrowReceipt extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'receipt_id',
+        'user_id',
         'borrow_date',
         'due_date',
         'return_date',

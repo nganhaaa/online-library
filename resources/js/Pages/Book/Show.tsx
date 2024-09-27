@@ -24,7 +24,8 @@ export default function Show({ book, auth, headerProps }: ShowProps) {
         setSubmittingBookId(bookId);
         setError(null); // Clear any previous error
         try {
-            router.post(route("cart.add", { bookId, quantity }));
+            await router.post(route("cart.add", { bookId, quantity }));
+            // alert('Book added to cart successfully!');
         } catch (error) {
             console.error("Error adding to cart:", error);
             setError("Failed to add book to cart. Please try again.");

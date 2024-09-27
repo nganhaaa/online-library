@@ -76,6 +76,9 @@ export default function Index({ auth, headerProps, cartItems = {}, success, erro
         setIsLoading(true);
         try {
             router.post(route('cart.borrow'));
+            setLocalCartItems(prevItems => {
+                return {};
+            });
         } catch (err) {
             console.error('Error creating borrowing receipt:', err);
             alert('Failed to create borrowing receipt.');

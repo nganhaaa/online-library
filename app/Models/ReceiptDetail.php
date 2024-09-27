@@ -45,6 +45,8 @@ class ReceiptDetail extends Model
     protected $fillable = [
         'receipt_id',
         'book_id',
+        'quantity',
+        'status',
     ];
 
     /**
